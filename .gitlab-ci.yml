@@ -580,6 +580,31 @@ chaos-test-singlenodeheight:
   after_script:
     - chaostest clean
 
+# job: chaos run weekly
+chaos-weekly:
+  environment:
+    name:                          parity-chaosnet
+  image:                           parity/chaostools:latest
+  interruptible: true
+  needs:
+    - job:                         docker-build-chaos
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+  script:
+    - cd ./substrate/.maintain/chaostest
+    - npm link
+    - chaostest version
+    # - chaostest clean --namespace chaos-weekly 
+    - chaostest spawn dev --image parity/substrate --namespace chaos-weekly
+  stage:                           chaos
+  tags: 
+    - parity-chaos
+  variables:
+    <<:                            *default-vars
+
+
+
+
 #### stage:                        publish
 
 .build-push-docker-image:          &build-push-docker-image
