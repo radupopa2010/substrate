@@ -28,6 +28,7 @@ stages:
   - post-build-test
   - docker
   - chaos
+  - chaos-weekly-scheduled
   - publish
   - deploy
   - flaming-fir
@@ -598,7 +599,7 @@ chaos-weekly:
     - chaostest version
     # - chaostest clean --namespace chaos-weekly 
     - chaostest spawn dev --image parity/substrate --namespace chaos-weekly
-  stage:                           chaos
+  stage:                           chaos-weekly-scheduled
   tags: 
     - parity-chaos
   variables:
