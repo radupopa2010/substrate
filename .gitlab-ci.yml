@@ -586,8 +586,8 @@ chaos-weekly:
     name:                          parity-chaosnet
   image:                           parity/chaostools:latest
   interruptible: true
-  needs:
-    - job:                         docker-build-chaos
+  #   needs:
+  #  - job:                         docker-build-chaos
   rules:
     - if: '$RUN_WEEKLY == "true"'
       when: always
