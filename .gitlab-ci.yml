@@ -589,6 +589,8 @@ chaos-weekly:
   needs:
     - job:                         docker-build-chaos
   rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
   script:
     - cd ./substrate/.maintain/chaostest
