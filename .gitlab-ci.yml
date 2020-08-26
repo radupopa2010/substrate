@@ -134,6 +134,9 @@ check-runtime:
   stage:                           check
   image:                           paritytech/tools:latest
   <<:                              *kubernetes-build
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   only:
     - /^[0-9]+$/
   variables:
@@ -148,6 +151,9 @@ check-signed-tag:
   stage:                           check
   image:                           paritytech/tools:latest
   <<:                              *kubernetes-build
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   only:
     - /^ci-release-.*$/
     - /^v[0-9]+\.[0-9]+\.[0-9]+.*$/
@@ -158,6 +164,9 @@ check-line-width:
   stage:                           check
   image:                           paritytech/tools:latest
   <<:                              *kubernetes-build
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   only:
     - /^[0-9]+$/
   script:
@@ -168,6 +177,9 @@ test-dependency-rules:
   stage:                           check
   image:                           paritytech/tools:latest
   <<:                              *kubernetes-build
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   except:
     variables:
       - $DEPLOY_TAG
@@ -190,6 +202,9 @@ cargo-deny:
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   only:
     - schedules
     - tags
@@ -210,6 +225,9 @@ cargo-check-benches:
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   script:
     - BUILD_DUMMY_WASM_BINARY=1 time cargo +nightly check --benches --all
     - cargo run --release -p node-bench -- ::node::import::native::sr25519::transfer_keep_alive::paritydb::small
@@ -220,6 +238,9 @@ cargo-check-subkey:
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   script:
     - cd ./bin/utils/subkey
     - BUILD_DUMMY_WASM_BINARY=1 time cargo check --release
@@ -229,6 +250,9 @@ test-deterministic-wasm:
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   variables:
     <<:                            *default-vars
   except:
@@ -251,6 +275,9 @@ test-linux-stable:                 &test-linux
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   variables:
     <<:                            *default-vars
     # Enable debug assertions since we are running optimized builds for testing
@@ -271,6 +298,9 @@ unleash-check:
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   only:
     - master
     - tags
@@ -283,6 +313,9 @@ test-frame-examples-compile-to-wasm:
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   variables:
     <<:                            *default-vars
     # Enable debug assertions since we are running optimized builds for testing
@@ -301,6 +334,9 @@ test-frame-examples-compile-to-wasm:
 
 test-linux-stable-int:
   <<:                              *test-linux
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   except:
     variables:
       - $DEPLOY_TAG
@@ -325,6 +361,9 @@ check-web-wasm:
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   script:
     # WASM support is in progress. As more and more crates support WASM, we
     # should add entries here. See https://github.com/paritytech/substrate/issues/2416
@@ -343,6 +382,9 @@ test-full-crypto-feature:
   stage:                           test
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   variables:
     <<:                            *default-vars
     # Enable debug assertions since we are running optimized builds for testing
@@ -364,6 +406,9 @@ cargo-check-macos:
   # shell runner on mac ignores the image set in *docker-env
   <<:                              *docker-env
   <<:                              *docker-env-only
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   script:
     - BUILD_DUMMY_WASM_BINARY=1 time cargo check --release
     - sccache -s
@@ -374,6 +419,9 @@ test-prometheus-alerting-rules:
   stage:                           test
   image:                           paritytech/tools:latest
   <<:                              *kubernetes-build
+  rules:
+    - if: '$RUN_WEEKLY == "true"'
+      when: always
   script:
     - promtool check rules .maintain/monitoring/alerting-rules/alerting-rules.yaml
     - cat .maintain/monitoring/alerting-rules/alerting-rules.yaml | promtool test rules .maintain/monitoring/alerting-rules/alerting-rule-tests.yaml
